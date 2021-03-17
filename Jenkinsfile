@@ -1,3 +1,4 @@
+  
 pipeline {
     agent any
     stages {
@@ -14,7 +15,7 @@ pipeline {
             }
             steps {
                 script {
-                    app = docker.build("asadleo94/train-schedule")
+                    app = docker.build("willbla/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
                     }
@@ -43,11 +44,15 @@ pipeline {
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     script {
-                            sh "docker pull asadleo94/train-schedule:${env.BUILD_NUMBER}\"                        
-                            sh "docker run --restart always --name train-schedule -p 8080:8080 -d asadleo94/train-schedule:${env.BUILD_NUMBER}\"
+                        sh "docker pull willbla/train-schedule:${env.BUILD_NUMBER}\"
+                        try {
+                            sh "docker stop train-schedule\"
+                            sh "docker rm train-schedule\"
+                        } catch (err) {
+                            echo: 'caught error: $err'
+                        }
+                        sh "docker run --restart always --name train-schedule -p 8080:8080 -d willbla/train-schedule:${env.BUILD_NUMBER}\"
                     }
                 }
             }
         }
-    }
-}
