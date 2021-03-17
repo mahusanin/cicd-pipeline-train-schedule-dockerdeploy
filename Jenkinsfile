@@ -41,17 +41,20 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                 script {
-                        sh "docker pull asadleo94/train-schedule:${env.BUILD_NUMBER}\"
+                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    user_name = $USERNAME
+                    pass_word = $USERPASS
+                    script {
+                        sh "sshpass -p '$pass_word' -v ssh -o StrictHostKeyChecking=no $user_name@$prod_ip \"docker pull asadleo94/train-schedule:${env.BUILD_NUMBER}\""
                         try {
-                            sh "docker stop train-schedule\"
-                            sh "docker rm train-schedule\"
+                            sh "sshpass -p '$pass_word' -v ssh -o StrictHostKeyChecking=no $user_name@$prod_ip \"docker stop train-schedule\""
+                            sh "sshpass -p '$pass_word' -v ssh -o StrictHostKeyChecking=no $user_name@$prod_ip \"docker rm train-schedule\""
                         } catch (err) {
                             echo: 'caught error: $err'
                         }
-                        sh "docker run --restart always --name train-schedule -p 8080:8080 -d asadleo94/train-schedule:${env.BUILD_NUMBER}\"
+                        sh "sshpass -p '$pass_word' -v ssh -o StrictHostKeyChecking=no $user_name@$prod_ip \"docker run --restart always --name train-schedule -p 8080:8080 -d asadleo94/train-schedule:${env.BUILD_NUMBER}\""
                     }
-                
+                }
             }
         }
     }
