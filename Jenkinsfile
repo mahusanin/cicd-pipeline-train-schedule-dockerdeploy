@@ -43,9 +43,8 @@ pipeline {
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     script {
-                        sh "ssh $USERNAME@$prod_ip"
-                        sh "'$USERPASS'"
-                        sh "ls -ltr"
+                            sh "docker pull asadleo94/train-schedule:${env.BUILD_NUMBER}\"                        
+                            sh "docker run --restart always --name train-schedule -p 8080:8080 -d asadleo94/train-schedule:${env.BUILD_NUMBER}\"
                     }
                 }
             }
