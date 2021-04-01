@@ -28,7 +28,9 @@ pipeline {
             steps {
                 script {
                     sh "docker login -u admim --password-stdin @Dhbf04km https://18.197.69.199/"
-                    sh "docker push harbor/library/"${env.BUILD_NUMBER}"[:"latest"]"    
+                    echo '${env.BUILD_NUMBER}'
+                    echo 'latest"'
+                        
                 }
             }
         }
