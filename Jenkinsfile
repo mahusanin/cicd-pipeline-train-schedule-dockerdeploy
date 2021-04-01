@@ -28,7 +28,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'harbor_hub_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                 script {
-                    sh "docker login -u $USERNAME --password-stdin 'USERPASS' https://18.197.69.199/"
+                    sh "docker login -u $USERNAME --password-stdin '$USERPASS' https://18.197.69.199/"
                     echo '${env.BUILD_NUMBER}'
                     echo 'latest"'
                     }   
