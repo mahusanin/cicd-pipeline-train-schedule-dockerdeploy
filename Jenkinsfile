@@ -27,7 +27,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://18.197.69.199/', 'harbor_hub_login') {
+                    docker.withRegistry('https://18.197.69.199/api/v2.0', 'harbor_hub_login1') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
