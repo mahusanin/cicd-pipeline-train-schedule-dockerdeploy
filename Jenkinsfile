@@ -26,7 +26,6 @@ pipeline {
                 branch 'master'
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]
                 script {
                     sh "docker login -u admim --password-stdin @Dhbf04km https://18.197.69.199/"
                     sh "docker push harbor/library/"${env.BUILD_NUMBER}"[:"latest"]"    
