@@ -14,7 +14,7 @@ pipeline {
             }
             steps {
                 script {
-                    app = docker.build("willbla/train-schedule")
+                    app = docker.build("cloudyrion/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
                     }
@@ -26,11 +26,10 @@ pipeline {
                 branch 'master'
             }
             steps {
+                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]
                 script {
-                    docker.withRegistry('https://18.197.69.199/api/v2.0', 'harbor_hub_login1') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
+                    sh "docker login -u admim --password-stdin @Dhbf04km https://18.197.69.199/"
+                    sh "docker push harbor/library/"${env.BUILD_NUMBER}"[:"latest"]"    
                 }
             }
         }
